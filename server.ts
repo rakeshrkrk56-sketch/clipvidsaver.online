@@ -37,9 +37,15 @@ app.post('/api/scrape', downloadLimiter, async (req, res) => {
     // Launch puppeteer with basic arguments to run reliably in container environments
     const launchOptions: any = {
       headless: true, // Use headless mode
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
-      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium'
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
     };
+
+    // Use specific Chromium only in production or if explicitly passed.
+    // In dev, undefined allows Puppeteer to use its bundled Chromium.
+    const customExePath = process.env.PUPPETEER_EXECUTABLE_PATH || (process.env.NODE_ENV === 'production' ? '/usr/bin/chromium' : undefined);
+    if (customExePath) {
+      launchOptions.executablePath = customExePath;
+    }
 
     browser = await puppeteer.launch(launchOptions);
 
