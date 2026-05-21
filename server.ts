@@ -3,6 +3,7 @@ import express from 'express';
 import path from 'path';
 import puppeteer from 'puppeteer';
 import cors from 'cors';
+import rateLimit from 'express-rate-limit';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,8 +15,15 @@ app.set('trust proxy', 1);
 app.use(cors());
 app.use(express.json());
 
+// Basic rate limit (20 req/15min) on download route
+const downloadLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // limit each IP to 20 requests per windowMs
+  message: { error: 'Too many requests from this IP, please try again after 15 minutes' }
+});
+
 // Main API endpoint for scraping AI video
-app.post('/api/scrape', async (req, res) => {
+app.post('/api/scrape', downloadLimiter, async (req, res) => {
   const { url } = req.body;
 
   if (!url) {
@@ -29,12 +37,9 @@ app.post('/api/scrape', async (req, res) => {
     // Launch puppeteer with basic arguments to run reliably in container environments
     const launchOptions: any = {
       headless: true, // Use headless mode
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium'
     };
-
-    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-      launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-    }
 
     browser = await puppeteer.launch(launchOptions);
 
