@@ -1,0 +1,6 @@
+{
+  "name": "clipvidsaver.online",
+  "description": "AI Video Downloader that saves watermark-free HD videos",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
