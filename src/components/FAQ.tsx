@@ -4,28 +4,20 @@ import { motion, AnimatePresence } from 'motion/react';
 
 const FAQS = [
   {
-    q: "Is ClipVidSaver.online free to use?",
-    a: "Yes. ClipVidSaver.online is completely free to use with no hidden charges or subscriptions."
+    q: "Can I download Meta AI videos without a watermark?",
+    a: "Yes! ClipVidSaver is specifically designed to remove watermarks from Meta AI generated videos. It extracts the raw HD MP4 file without any branding."
   },
   {
-    q: "Do I need an account?",
-    a: "No account or registration is required. Simply paste your video link and start downloading."
+    q: "Is this Meta AI video downloader completely free?",
+    a: "Absolutely. ClipVidSaver is 100% free to use for downloading Meta AI videos. There are no hidden fees, subscriptions, or limits."
   },
   {
-    q: "What video formats are supported?",
-    a: "ClipVidSaver.online supports MP4 and other commonly used video formats depending on the original source."
+    q: "Does ClipVidSaver work on mobile phones?",
+    a: "Yes, our Meta AI video downloader works seamlessly on iPhone, Android, tablets, and desktop computers. You can save the video directly to your camera roll or downloads folder."
   },
   {
-    q: "Is ClipVidSaver.online safe?",
-    a: "Yes. We use secure HTTPS connections and do not permanently store downloaded videos on our servers."
-  },
-  {
-    q: "Why is my download slow?",
-    a: "Download speed depends on your internet connection, server load, and the size of the original video file."
-  },
-  {
-    q: "Can I save videos for offline use?",
-    a: "Yes. Downloaded videos are saved directly to your device for offline viewing."
+    q: "Will the downloaded Meta AI video be high quality?",
+    a: "Yes, ClipVidSaver downloads the original HD MP4 quality directly from Meta AI, ensuring you get the crispest video possible."
   }
 ];
 
@@ -37,7 +29,7 @@ export default function FAQ() {
       <h2 id="faq-heading" className="text-3xl md:text-4xl font-bold text-center text-white mb-4">
         Frequently Asked<br aria-hidden="true" />Questions
       </h2>
-      <p className="text-center text-lg text-slate-400 mb-12">Common questions about ClipVidSaver.online.</p>
+      <p className="text-center text-lg text-slate-400 mb-12">Common questions about ClipVidSaver.</p>
       
       <div className="space-y-4">
         {FAQS.map((faq, idx) => {

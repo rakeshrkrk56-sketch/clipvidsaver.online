@@ -12,8 +12,8 @@ export default function SEO({ title, description, canonicalPath }: SEOProps) {
 
   useEffect(() => {
     // 1. Update Title
-    const baseTitle = 'ClipVidSaver.online';
-    const finalTitle = title ? `${title} | ${baseTitle}` : `AI Video Downloader - Download HD MP4 Without Watermark | ${baseTitle}`;
+    const baseTitle = 'ClipVidSaver';
+    const finalTitle = title ? `${title} | ${baseTitle}` : `Meta AI Video Downloader - No Watermark | ${baseTitle}`;
     document.title = finalTitle;
     
     // Update og:title and twitter:title
@@ -24,7 +24,7 @@ export default function SEO({ title, description, canonicalPath }: SEOProps) {
     if (twitterTitle) twitterTitle.setAttribute('content', finalTitle);
 
     // 2. Update Description
-    const finalDesc = description || "Download AI videos easily with our free AI video downloader. Save AI-generated files locally in HD MP4 with audio and no watermark. Fast, secure, and reliable.";
+    const finalDesc = description || "Download Meta AI generated videos without watermark in HD. Free, fast & working 2026 tool by ClipVidSaver.";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', finalDesc);
 

@@ -8,11 +8,11 @@ export default function Footer() {
         <div className="bg-indigo-600 text-white p-2 rounded-lg shadow-lg shadow-indigo-600/30">
           <Download size={24} className="stroke-[2.5]" />
         </div>
-        <span className="font-bold text-2xl text-slate-100 tracking-tight">ClipVidSaver.online</span>
+        <span className="font-bold text-2xl text-slate-100 tracking-tight">ClipVidSaver</span>
       </div>
       
       <p className="text-slate-400 max-w-md mx-auto mb-12 text-lg">
-        Simple and reliable AI video downloading platform
+        The #1 Meta AI Video Downloader
       </p>
 
       <div className="flex flex-wrap justify-center gap-x-6 gap-y-4 text-slate-400 font-medium max-w-3xl mx-auto mb-12">
@@ -28,7 +28,7 @@ export default function Footer() {
       </div>
 
       <p className="text-slate-500 text-sm max-w-2xl mx-auto leading-relaxed">
-        © 2026 ClipVidSaver.online. All rights reserved.<br/>
+        © 2026 ClipVidSaver. The #1 Meta AI Video Downloader. All rights reserved.<br/>
         We are not affiliated with or endorsed by any video platform. Always respect copyright and platform terms of service.
       </p>
     </footer>

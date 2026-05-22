@@ -8,7 +8,7 @@ export default function Header() {
         <div className="bg-indigo-600 text-white p-2 rounded-lg shadow-lg shadow-indigo-600/30">
           <Download size={20} className="stroke-[2.5]" />
         </div>
-        <span className="font-bold text-xl text-slate-100 tracking-tight">ClipVidSaver.online</span>
+        <span className="font-bold text-xl text-slate-100 tracking-tight">ClipVidSaver</span>
       </Link>
       
       <div className="flex items-center space-x-3">

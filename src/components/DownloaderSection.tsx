@@ -119,8 +119,8 @@ export default function DownloaderSection() {
               <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-xl blur-xl opacity-50 pointer-events-none" />
               <input
                 type="url"
-                aria-label="Paste AI Video URL"
-                placeholder="Paste AI video link here..."
+                aria-label="Paste Meta AI Video URL"
+                placeholder="Paste Meta AI video URL here..."
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 className="w-full px-5 py-4 bg-slate-950/50 border border-slate-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-slate-950 transition-all text-slate-100 placeholder:text-slate-500 relative z-10"
@@ -128,10 +128,10 @@ export default function DownloaderSection() {
               <button
                 onClick={handleDownloadClick}
                 disabled={!url.trim()}
-                aria-label="Download AI Video"
+                aria-label="Download Meta AI Video"
                 className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:hover:bg-indigo-600 text-white font-medium py-4 rounded-xl transition-colors shadow-lg shadow-indigo-600/20 relative z-10"
               >
-                Download AI Video
+                Download Meta AI Video
               </button>
             </div>
           </motion.div>
