@@ -1,8 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /api/
-Disallow: /views/
-Disallow: /temp_downloads/
-Disallow: /node_modules/
 
 Sitemap: https://clipvidsaver.online/sitemap.xml
