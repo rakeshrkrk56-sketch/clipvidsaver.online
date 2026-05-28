@@ -1,5 +1,6 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import React, { Suspense } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router-dom';
+import React, { Suspense, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AdPlaceholder from './components/AdPlaceholder';
@@ -17,7 +18,38 @@ const Safety = React.lazy(() => import('./pages/Safety'));
 const Blog = React.lazy(() => import('./pages/Blog'));
 const BlogPost = React.lazy(() => import('./pages/BlogPost'));
 
+import { Outlet } from 'react-router-dom';
+
+function LanguageLayout() {
+  const { lang } = useParams();
+  const { i18n } = useTranslation();
+
+  useEffect(() => {
+    if (lang && ['en', 'es', 'pt', 'de'].includes(lang)) {
+      i18n.changeLanguage(lang);
+      document.documentElement.lang = lang;
+    }
+  }, [lang, i18n]);
+
+  return <Outlet />;
+}
+
 export default function App() {
+  const innerRoutes = (
+    <>
+      <Route path="/" element={<Home isHomePage={true} />} />
+      <Route path="meta-ai-video-downloader" element={<Home isHomePage={false} />} />
+      <Route path="about" element={<About />} />
+      <Route path="how-it-works" element={<HowItWorks />} />
+      <Route path="founder" element={<Founder />} />
+      <Route path="contact" element={<Contact />} />
+      <Route path="copyright" element={<Copyright />} />
+      <Route path="safety" element={<Safety />} />
+      <Route path="blog" element={<Blog />} />
+      <Route path="blog/:slug" element={<BlogPost />} />
+    </>
+  );
+
   return (
     <BrowserRouter>
       <ScrollToTop />
@@ -30,16 +62,12 @@ export default function App() {
         <main className="flex-1">
           <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div></div>}>
             <Routes>
-              <Route path="/" element={<Home isHomePage={true} />} />
-              <Route path="/meta-ai-video-downloader" element={<Home isHomePage={false} />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/how-it-works" element={<HowItWorks />} />
-              <Route path="/founder" element={<Founder />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/copyright" element={<Copyright />} />
-              <Route path="/safety" element={<Safety />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/">
+                {innerRoutes}
+              </Route>
+              <Route path="/:lang" element={<LanguageLayout />}>
+                 {innerRoutes}
+              </Route>
             </Routes>
           </Suspense>
         </main>

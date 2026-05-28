@@ -1,5 +1,6 @@
 import SEO from '../components/SEO';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const BLOG_POSTS = [
   {
@@ -23,11 +24,13 @@ const BLOG_POSTS = [
 ];
 
 export default function Blog() {
+  const { t } = useTranslation();
+
   return (
     <>
       <SEO 
-        title="Blog - Meta AI Video Tips & Guides" 
-        description="Read the latest articles about downloading Meta AI videos without watermarks, content creation, and AI tools." 
+        title={t('seo.blogTitle')} 
+        description={t('seo.blogDesc')} 
       />
       <div className="max-w-4xl mx-auto px-4 py-16 md:py-24">
         <h1 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">Blog & Guides</h1>

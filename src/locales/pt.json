@@ -1,0 +1,52 @@
+{
+  "hero": {
+    "tag": "100% Grátis • Sem Marca d'Água • Qualidade HD • Funciona em 2026",
+    "title1": "Baixar Vídeos do Meta AI",
+    "title2": "Sem Marca d'Água",
+    "desc1": "O ClipVidSaver é a única ferramenta gratuita que remove as",
+    "desc2": "completamente. Basta colar o link do seu vídeo abaixo para salvar o arquivo instantaneamente como um",
+    "metaAiWatermarks": "marcas d'água do Meta AI",
+    "hdMp4": "MP4 em HD"
+  },
+  "features": {
+    "step1Title": "Como Baixar Vídeos Gerados pelo Meta AI",
+    "step1Item1": "Obtenha a URL do vídeo gerado pelo Meta AI que você deseja salvar.",
+    "step1Item2": "Insira na caixa de entrada do ClipVidSaver no topo desta página.",
+    "step1Item3": "Clique em baixar e salve seu arquivo MP4 HD sem marcas d'água.",
+    "stepLabel1": "Copie o link",
+    "stepLabel2": "Cole a URL",
+    "stepLabel3": "Download instantâneo",
+    "step2Title": "Por que usar o ClipVidSaver para vídeos do Meta AI?",
+    "step2Desc1": "O ClipVidSaver foi construído especificamente para o formato Meta AI. Embora os baixadores padrão geralmente falhem ao processar gerações de vídeo dinâmicas ou deixem marcas intrusivas, nosso mecanismo extrai nativamente o arquivo de origem bruto. Você obtém um",
+    "step2Desc2": "que preserva com precisão a qualidade e o áudio originais.",
+    "watermarkFree": "MP4 HD perfeito e sem marca d'água"
+  },
+  "faq": {
+    "title": "Perguntas Frequentes",
+    "q1": "Como baixo vídeos do Meta AI sem marca d'água?",
+    "a1": "Basta copiar a URL do seu vídeo do Meta AI, colá-la na nossa ferramenta de download acima e clicar em Baixar. Nosso sistema processa automaticamente o vídeo e fornece um arquivo MP4 HD cristalino e sem marca d'água.",
+    "q2": "Esta ferramenta é totalmente gratuita?",
+    "a2": "Sim! O ClipVidSaver é 100% gratuito. Não exigimos registro, assinaturas ou taxas ocultas. Você pode baixar quantos vídeos quiser.",
+    "q3": "O download afeta a qualidade do vídeo?",
+    "a3": "Não. Extraímos o arquivo fonte nativo diretamente dos servidores do Meta AI. Isso garante que você obtenha a mesma resolução HD, taxa de quadros e qualidade de áudio que a geração original, sem perda de compressão.",
+    "q4": "Quais dispositivos e navegadores são suportados?",
+    "a4": "Nosso baixador baseado na web funciona em todos os dispositivos modernos, incluindo iPhone, Android, Mac e PCs com Windows. É compatível com Chrome, Safari, Firefox e Edge."
+  },
+  "seo": {
+    "homeTitle": "Baixar Vídeos de IA Grátis",
+    "metaTitle": "Baixar Vídeos Meta AI - Sem Marca d'Água (2026)",
+    "description": "Baixe vídeos gerados pelo Meta AI sem marcas d'água. Ferramenta online grátis para salvar vídeos MP4 HD diretamente do Meta AI.",
+    "blogTitle": "Blog - Dicas e Guias do Meta AI",
+    "blogDesc": "Leia os artigos mais recentes sobre como baixar vídeos do Meta AI sem marcas d'água, criação de conteúdo e ferramentas de IA."
+  },
+  "nav": {
+    "howItWorks": "Como Funciona",
+    "blog": "Blog"
+  },
+  "home": {
+    "lookMetaAi": "Procurando especificamente pelo Meta AI? Confira nossa página dedicada do",
+    "metaAiLink": "Baixador de Vídeos Meta AI",
+    "lookOther": "Quer baixar vídeos de outras ferramentas de IA? Volte para nossa",
+    "mainLink": "Página Principal"
+  }
+}

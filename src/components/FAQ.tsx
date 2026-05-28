@@ -1,28 +1,30 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-
-const FAQS = [
-  {
-    q: "Can I download Meta AI videos without a watermark?",
-    a: "Yes! ClipVidSaver is specifically designed to remove watermarks from Meta AI generated videos. It extracts the raw HD MP4 file without any branding."
-  },
-  {
-    q: "Is this Meta AI video downloader completely free?",
-    a: "Absolutely. ClipVidSaver is 100% free to use for downloading Meta AI videos. There are no hidden fees, subscriptions, or limits."
-  },
-  {
-    q: "Does ClipVidSaver work on mobile phones?",
-    a: "Yes, our Meta AI video downloader works seamlessly on iPhone, Android, tablets, and desktop computers. You can save the video directly to your camera roll or downloads folder."
-  },
-  {
-    q: "Will the downloaded Meta AI video be high quality?",
-    a: "Yes, ClipVidSaver downloads the original HD MP4 quality directly from Meta AI, ensuring you get the crispest video possible."
-  }
-];
+import { useTranslation } from 'react-i18next';
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number>(0);
+  const { t } = useTranslation();
+
+  const FAQS = useMemo(() => [
+    {
+      q: t('faq.q1'),
+      a: t('faq.a1')
+    },
+    {
+      q: t('faq.q2'),
+      a: t('faq.a2')
+    },
+    {
+      q: t('faq.q3'),
+      a: t('faq.a3')
+    },
+    {
+      q: t('faq.q4'),
+      a: t('faq.a4')
+    }
+  ], [t]);
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -43,7 +45,7 @@ export default function FAQ() {
         {JSON.stringify(faqSchema)}
       </script>
       <h2 id="faq-heading" className="text-3xl md:text-4xl font-bold text-center text-white mb-4">
-        Frequently Asked<br aria-hidden="true" />Questions
+        {t('faq.title')}
       </h2>
       <p className="text-center text-lg text-slate-400 mb-12">Common questions about ClipVidSaver.</p>
       

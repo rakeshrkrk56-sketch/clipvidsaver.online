@@ -1,18 +1,48 @@
 import { Download, Menu, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const LANGUAGES = [
   { code: 'en', flag: '🇺🇸', label: 'English' },
   { code: 'es', flag: '🇪🇸', label: 'Español' },
-  { code: 'fr', flag: '🇫🇷', label: 'Français' },
   { code: 'pt', flag: '🇧🇷', label: 'Português' },
   { code: 'de', flag: '🇩🇪', label: 'Deutsch' },
 ];
 
 export default function Header() {
   const [langMenuOpen, setLangMenuOpen] = useState(false);
-  const [currentLang, setCurrentLang] = useState(LANGUAGES[0]);
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [currentLang, setCurrentLang] = useState(
+    LANGUAGES.find((l) => l.code === i18n.language) || LANGUAGES[0]
+  );
+
+  useEffect(() => {
+    setCurrentLang(LANGUAGES.find((l) => l.code === i18n.language) || LANGUAGES[0]);
+  }, [i18n.language]);
+
+  const changeLanguage = (langInfo: typeof LANGUAGES[0]) => {
+    setLangMenuOpen(false);
+    
+    const isLangPrefix = /^\/(en|es|pt|de)(\/|$)/;
+    let newPath = location.pathname;
+    
+    if (langInfo.code === 'en') {
+      newPath = location.pathname.replace(isLangPrefix, '/');
+    } else {
+      if (isLangPrefix.test(location.pathname)) {
+        newPath = location.pathname.replace(isLangPrefix, `/${langInfo.code}$2`);
+      } else {
+        newPath = `/${langInfo.code}${location.pathname === '/' ? '' : location.pathname}`;
+      }
+    }
+    
+    if (newPath === '') newPath = '/';
+    navigate(newPath);
+  };
 
   return (
     <header className="flex items-center justify-between py-3 px-3 md:px-4 md:py-4 bg-slate-900 border-b border-slate-800 shadow-sm sticky top-0 z-50">
@@ -25,8 +55,8 @@ export default function Header() {
       
       <div className="flex items-center space-x-2 md:space-x-4 shrink-0">
         <nav className="hidden md:flex items-center space-x-6 mr-2">
-          <Link to="/how-it-works" className="text-slate-300 hover:text-white font-medium transition-colors">How it Works</Link>
-          <Link to="/blog" className="text-slate-300 hover:text-white font-medium transition-colors">Blog</Link>
+          <Link to="/how-it-works" className="text-slate-300 hover:text-white font-medium transition-colors">{t('nav.howItWorks')}</Link>
+          <Link to="/blog" className="text-slate-300 hover:text-white font-medium transition-colors">{t('nav.blog')}</Link>
         </nav>
         
         <div className="relative">
@@ -46,11 +76,7 @@ export default function Header() {
                 <button
                   key={lang.code}
                   className={`w-full text-left px-4 py-2 hover:bg-slate-700 transition-colors flex items-center gap-2 ${currentLang.code === lang.code ? 'bg-slate-700/50 text-white' : 'text-slate-300'}`}
-                  onClick={() => {
-                    setCurrentLang(lang);
-                    setLangMenuOpen(false);
-                    document.documentElement.lang = lang.code;
-                  }}
+                  onClick={() => changeLanguage(lang)}
                 >
                   <span>{lang.flag}</span>
                   <span className="font-medium text-sm">{lang.label}</span>

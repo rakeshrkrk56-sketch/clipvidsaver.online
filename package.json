@@ -16,7 +16,10 @@
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
     "express-rate-limit": "^8.5.2",
-    "puppeteer": "^25.0.4"
+    "i18next": "^26.3.0",
+    "i18next-browser-languagedetector": "^8.2.1",
+    "puppeteer": "^25.0.4",
+    "react-i18next": "^17.0.8"
   },
   "devDependencies": {
     "@google/genai": "^1.29.0",
