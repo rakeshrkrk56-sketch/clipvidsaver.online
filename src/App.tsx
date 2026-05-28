@@ -37,7 +37,7 @@ function LanguageLayout() {
 export default function App() {
   const innerRoutes = (
     <>
-      <Route path="/" element={<Home isHomePage={true} />} />
+      <Route index element={<Home isHomePage={true} />} />
       <Route path="meta-ai-video-downloader" element={<Home isHomePage={false} />} />
       <Route path="about" element={<About />} />
       <Route path="how-it-works" element={<HowItWorks />} />
