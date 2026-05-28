@@ -18,18 +18,32 @@ const Safety = React.lazy(() => import('./pages/Safety'));
 const Blog = React.lazy(() => import('./pages/Blog'));
 const BlogPost = React.lazy(() => import('./pages/BlogPost'));
 
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 function LanguageLayout() {
-  const { lang } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   const { i18n } = useTranslation();
 
   useEffect(() => {
-    if (lang && ['en', 'es', 'pt', 'de'].includes(lang)) {
-      i18n.changeLanguage(lang);
-      document.documentElement.lang = lang;
+    const pathParts = location.pathname.split('/');
+    const firstPart = pathParts[1];
+    const isLangPrefix = ['es', 'pt', 'de'].includes(firstPart);
+    const currentLang = isLangPrefix ? firstPart : 'en';
+
+    if (location.pathname === '/') {
+      const savedLang = localStorage.getItem('preferred_language');
+      if (savedLang && ['es', 'pt', 'de'].includes(savedLang)) {
+        navigate(`/${savedLang}`, { replace: true });
+        return;
+      }
     }
-  }, [lang, i18n]);
+
+    if (i18n.language !== currentLang) {
+      i18n.changeLanguage(currentLang);
+    }
+    document.documentElement.lang = currentLang;
+  }, [location.pathname, i18n, navigate]);
 
   return <Outlet />;
 }
@@ -62,11 +76,13 @@ export default function App() {
         <main className="flex-1">
           <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div></div>}>
             <Routes>
-              <Route path="/">
-                {innerRoutes}
-              </Route>
-              <Route path="/:lang" element={<LanguageLayout />}>
-                 {innerRoutes}
+              <Route element={<LanguageLayout />}>
+                <Route path="/">
+                  {innerRoutes}
+                </Route>
+                <Route path="/:lang">
+                   {innerRoutes}
+                </Route>
               </Route>
             </Routes>
           </Suspense>
