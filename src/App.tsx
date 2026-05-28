@@ -1,17 +1,21 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { Suspense } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import AdPlaceholder from './components/AdPlaceholder';
-
-// Pages
-import Home from './pages/Home';
-import About from './pages/About';
-import HowItWorks from './pages/HowItWorks';
-import Founder from './pages/Founder';
-import Contact from './pages/Contact';
-import Copyright from './pages/Copyright';
-import Safety from './pages/Safety';
 import ScrollToTop from './components/ScrollToTop';
+import StickyCTA from './components/StickyCTA';
+
+// Lazy Loaded Pages
+const Home = React.lazy(() => import('./pages/Home'));
+const About = React.lazy(() => import('./pages/About'));
+const HowItWorks = React.lazy(() => import('./pages/HowItWorks'));
+const Founder = React.lazy(() => import('./pages/Founder'));
+const Contact = React.lazy(() => import('./pages/Contact'));
+const Copyright = React.lazy(() => import('./pages/Copyright'));
+const Safety = React.lazy(() => import('./pages/Safety'));
+const Blog = React.lazy(() => import('./pages/Blog'));
+const BlogPost = React.lazy(() => import('./pages/BlogPost'));
 
 export default function App() {
   return (
@@ -24,22 +28,27 @@ export default function App() {
         <AdPlaceholder id="ad-top-banner" className="w-full max-w-5xl mx-auto py-2 px-4 mt-2 shrink-0" />
 
         <main className="flex-1">
-          <Routes>
-            <Route path="/" element={<Navigate to="/meta-ai-video-downloader" replace />} />
-            <Route path="/meta-ai-video-downloader" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/how-it-works" element={<HowItWorks />} />
-            <Route path="/founder" element={<Founder />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/copyright" element={<Copyright />} />
-            <Route path="/safety" element={<Safety />} />
-          </Routes>
+          <Suspense fallback={<div className="flex items-center justify-center min-h-[50vh]"><div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div></div>}>
+            <Routes>
+              <Route path="/" element={<Home isHomePage={true} />} />
+              <Route path="/meta-ai-video-downloader" element={<Home isHomePage={false} />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/how-it-works" element={<HowItWorks />} />
+              <Route path="/founder" element={<Founder />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/copyright" element={<Copyright />} />
+              <Route path="/safety" element={<Safety />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+            </Routes>
+          </Suspense>
         </main>
         
         <Footer />
+        <StickyCTA />
 
         {/* Bottom Sticky Ad Container */}
-        <div className="fixed bottom-0 left-0 w-full z-40 pointer-events-none flex justify-center">
+        <div className="fixed bottom-0 left-0 w-full z-40 pointer-events-none flex justify-center pb-16 md:pb-0">
           <AdPlaceholder 
             id="ad-bottom-sticky" 
             className="pointer-events-auto bg-slate-900/95 backdrop-blur-sm shadow-[0_-8px_20px_-5px_rgba(0,0,0,0.3)] border-t border-slate-800 w-full" 

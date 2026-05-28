@@ -36,9 +36,8 @@ app.post('/api/scrape', downloadLimiter, async (req, res) => {
     
     // Launch puppeteer with basic arguments to run reliably in container environments
     const launchOptions: any = {
-     executablePath: '/usr/bin/google-chrome',
-      headless: "new",
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      headless: true, // Use headless mode
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
     };
 
     // Use specific Chromium only in production or if explicitly passed.
@@ -124,22 +123,20 @@ app.post('/api/scrape', downloadLimiter, async (req, res) => {
 
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
-
-
-         const { createServer: createViteServer } = await import('vite');
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
     });
     app.use(vite.middlewares);
-} else {
+  } else {
     const distPath = path.join(process.cwd(), 'dist');
-    app.use('/blog', express.static(path.join(process.cwd(), 'dist/blog'),{ extensions: ['html'] }));
     app.use(express.static(distPath));
     app.get('*', (req, res) => {
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
+
   const server = app.listen(PORT as number, HOST as string, () => {
     console.log(`Server running on http://${HOST}:${PORT}`);
   });
@@ -158,4 +155,3 @@ async function startServer() {
 }
 
 startServer();
-

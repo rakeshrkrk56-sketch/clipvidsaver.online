@@ -7,7 +7,7 @@ export default function Features() {
       
       <article className="bg-slate-900 p-8 rounded-3xl shadow-xl shadow-black/10 border border-slate-800">
         <div className="bg-indigo-500/10 w-12 h-12 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/20">
-          <ListOrdered className="text-indigo-400 w-6 h-6" aria-hidden="true" />
+          <ListOrdered size={24} className="text-indigo-400 w-6 h-6" aria-hidden="true" />
         </div>
         <h3 className="text-xl font-bold text-white mb-4">How to Download Meta AI Generated Videos</h3>
         <ol className="list-decimal pl-5 space-y-3 text-slate-400 leading-relaxed text-lg">
@@ -19,7 +19,7 @@ export default function Features() {
 
       <article className="bg-slate-900 p-8 rounded-3xl shadow-xl shadow-black/10 border border-slate-800">
         <div className="bg-indigo-500/10 w-12 h-12 rounded-xl flex items-center justify-center mb-6 border border-indigo-500/20">
-          <ShieldCheck className="text-indigo-400 w-6 h-6" aria-hidden="true" />
+          <ShieldCheck size={24} className="text-indigo-400 w-6 h-6" aria-hidden="true" />
         </div>
         <h3 className="text-xl font-bold text-white mb-3">Why Use ClipVidSaver for Meta AI Videos?</h3>
         <p className="text-slate-400 leading-relaxed text-lg">

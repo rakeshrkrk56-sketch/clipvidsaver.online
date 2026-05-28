@@ -1,42 +1,69 @@
-import { useState } from 'react';
-import { Download, Menu, ChevronDown, X } from 'lucide-react';
+import { Download, Menu, ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+
+const LANGUAGES = [
+  { code: 'en', flag: '🇺🇸', label: 'English' },
+  { code: 'es', flag: '🇪🇸', label: 'Español' },
+  { code: 'fr', flag: '🇫🇷', label: 'Français' },
+  { code: 'pt', flag: '🇧🇷', label: 'Português' },
+  { code: 'de', flag: '🇩🇪', label: 'Deutsch' },
+];
 
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [langMenuOpen, setLangMenuOpen] = useState(false);
+  const [currentLang, setCurrentLang] = useState(LANGUAGES[0]);
 
   return (
-    <header className="bg-slate-900 border-b border-slate-800 shadow-sm sticky top-0 z-50">
-      <div className="flex items-center justify-between p-4">
-        <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-          <div className="bg-indigo-600 text-white p-2 rounded-lg shadow-lg shadow-indigo-600/30">
-            <Download size={20} className="stroke-[2.5]" />
-          </div>
-          <span className="font-bold text-xl text-slate-100 tracking-tight">ClipVidSaver</span>
-        </Link>
-        <div className="flex items-center space-x-3">
-          <button className="flex items-center space-x-2 border border-slate-700 bg-slate-800/50 px-3 py-1.5 rounded-lg hover:bg-slate-800 transition-colors">
-            <span className="text-xl">🇺🇸</span>
-            <ChevronDown size={16} className="text-slate-400" />
-          </button>
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="p-2 border border-slate-700 bg-slate-800/50 rounded-lg hover:bg-slate-800 transition-colors text-slate-300">
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+    <header className="flex items-center justify-between py-3 px-3 md:px-4 md:py-4 bg-slate-900 border-b border-slate-800 shadow-sm sticky top-0 z-50">
+      <Link to="/" className="flex items-center space-x-2 relative z-10 hover:opacity-80 transition-opacity shrink-0 min-w-0 mr-2">
+        <div className="bg-indigo-600 text-white p-1.5 md:p-2 rounded-lg shadow-lg shadow-indigo-600/30 shrink-0 flex items-center justify-center">
+          <Download size={20} className="w-4 h-4 md:w-5 md:h-5 stroke-[2.5]" />
         </div>
-      </div>
-
-      {menuOpen && (
-        <nav className="border-t border-slate-800 bg-slate-900 px-4 py-3 flex flex-col space-y-1">
-          <Link to="/" onClick={() => setMenuOpen(false)} className="text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors">🏠 Home</Link>
-          <Link to="/about" onClick={() => setMenuOpen(false)} className="text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors">ℹ️ About</Link>
-          <Link to="/how-it-works" onClick={() => setMenuOpen(false)} className="text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors">⚙️ How It Works</Link>
-          <Link to="/founder" onClick={() => setMenuOpen(false)} className="text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors">👤 About the Founder</Link>
-          <Link to="/contact" onClick={() => setMenuOpen(false)} className="text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors">📧 Contact</Link>
-          <a href="/blog/how-to-download-meta-ai-video-without-watermark" onClick={() => setMenuOpen(false)} className="text-slate-300 hover:text-white hover:bg-slate-800 px-3 py-2 rounded-lg transition-colors">📝 Blog</a>
+        <span className="font-bold text-base sm:text-lg md:text-xl text-slate-100 tracking-tight truncate">ClipVidSaver</span>
+      </Link>
+      
+      <div className="flex items-center space-x-2 md:space-x-4 shrink-0">
+        <nav className="hidden md:flex items-center space-x-6 mr-2">
+          <Link to="/how-it-works" className="text-slate-300 hover:text-white font-medium transition-colors">How it Works</Link>
+          <Link to="/blog" className="text-slate-300 hover:text-white font-medium transition-colors">Blog</Link>
         </nav>
-      )}
+        
+        <div className="relative">
+          <button 
+            aria-label="Select Language" 
+            aria-expanded={langMenuOpen}
+            onClick={() => setLangMenuOpen(!langMenuOpen)}
+            className="flex items-center space-x-1 md:space-x-2 border border-slate-700 bg-slate-800/50 px-2 py-1 md:px-3 md:py-1.5 rounded-lg hover:bg-slate-800 transition-colors"
+          >
+            <span className="text-base md:text-xl">{currentLang.flag}</span>
+            <ChevronDown size={16} className={`w-3 h-3 md:w-4 md:h-4 text-slate-400 transition-transform ${langMenuOpen ? 'rotate-180' : ''}`} />
+          </button>
+          
+          {langMenuOpen && (
+            <div className="absolute top-12 right-0 bg-slate-800 border border-slate-700 rounded-xl shadow-xl w-36 overflow-hidden z-20 animate-in fade-in zoom-in-95 duration-200">
+              {LANGUAGES.map((lang) => (
+                <button
+                  key={lang.code}
+                  className={`w-full text-left px-4 py-2 hover:bg-slate-700 transition-colors flex items-center gap-2 ${currentLang.code === lang.code ? 'bg-slate-700/50 text-white' : 'text-slate-300'}`}
+                  onClick={() => {
+                    setCurrentLang(lang);
+                    setLangMenuOpen(false);
+                    document.documentElement.lang = lang.code;
+                  }}
+                >
+                  <span>{lang.flag}</span>
+                  <span className="font-medium text-sm">{lang.label}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <button aria-label="Menu" className="md:hidden p-1.5 md:p-2 border border-slate-700 bg-slate-800/50 rounded-lg hover:bg-slate-800 transition-colors text-slate-300 flex items-center justify-center">
+          <Menu size={24} className="w-5 h-5 md:w-6 md:h-6" />
+        </button>
+      </div>
     </header>
   );
 }

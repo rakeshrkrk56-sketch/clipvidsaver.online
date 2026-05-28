@@ -4,11 +4,16 @@ interface AdPlaceholderProps {
 }
 
 export default function AdPlaceholder({ id, className = '' }: AdPlaceholderProps) {
-  // empty:hidden ensures the container uses 0px of space until an ad script injects content
+  // Mobile ads usually require at least 50px-100px of height. Reserving space reduces CLS.
+  const isTopBanner = id === 'ad-top-banner';
+  const isMiddleBanner = id === 'ad-middle-content';
+  const minHeightClass = (isTopBanner || isMiddleBanner) ? 'min-h-[50px] md:min-h-[90px]' : '';
+
   return (
     <div 
       id={id} 
-      className={`ad-container empty:hidden transition-all duration-300 flex justify-center items-center ${className}`}
+      className={`ad-container transition-all duration-300 flex justify-center items-center ${minHeightClass} ${className}`}
     />
   );
 }
+

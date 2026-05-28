@@ -24,8 +24,24 @@ const FAQS = [
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number>(0);
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": FAQS.map((faq) => ({
+      "@type": "Question",
+      "name": faq.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.a
+      }
+    }))
+  };
+
   return (
     <section className="max-w-3xl mx-auto px-4 mb-24" aria-labelledby="faq-heading">
+      <script type="application/ld+json">
+        {JSON.stringify(faqSchema)}
+      </script>
       <h2 id="faq-heading" className="text-3xl md:text-4xl font-bold text-center text-white mb-4">
         Frequently Asked<br aria-hidden="true" />Questions
       </h2>

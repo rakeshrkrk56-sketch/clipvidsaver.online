@@ -104,7 +104,7 @@ export default function DownloaderSection() {
   };
 
   return (
-    <section className="max-w-3xl mx-auto px-4 mb-20 relative z-10" aria-label="AI Video Downloader">
+    <section className="max-w-3xl mx-auto px-4 mb-20 relative z-10 min-h-[350px] md:min-h-[400px]" aria-label="AI Video Downloader">
       <AnimatePresence mode="wait">
         
         {status === 'IDLE' && (
@@ -166,7 +166,7 @@ export default function DownloaderSection() {
                 transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
               />
               <div className="absolute inset-0 bg-indigo-500/10 rounded-full blur-xl animate-pulse" />
-              <RefreshCw className="text-indigo-400 w-8 h-8 relative z-10" />
+              <RefreshCw size={32} className="text-indigo-400 w-8 h-8 relative z-10" />
             </div>
             
             <h2 className="text-2xl font-bold text-white mb-2">Analyzing Link</h2>
@@ -182,7 +182,7 @@ export default function DownloaderSection() {
             </div>
             
             <div className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4 text-left max-w-sm mx-auto flex gap-4 backdrop-blur-sm">
-              <AlertTriangle className="text-amber-400 w-6 h-6 shrink-0 mt-0.5" />
+              <AlertTriangle size={24} className="text-amber-400 w-6 h-6 shrink-0 mt-0.5" />
               <div>
                 <p className="font-semibold text-amber-300 text-sm mb-1">Queue Active</p>
                 <p className="text-amber-200/70 text-sm">Validating media source. Process will complete momentarily.</p>
@@ -204,7 +204,7 @@ export default function DownloaderSection() {
             </div>
             
             <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-red-500/10 mb-8 border border-red-500/20">
-              <AlertTriangle className="text-red-400 w-10 h-10" />
+              <AlertTriangle size={40} className="text-red-400 w-10 h-10" />
             </div>
             
             <h2 className="text-2xl font-bold text-white mb-4">Processing Failed</h2>
@@ -233,6 +233,8 @@ export default function DownloaderSection() {
                      <img 
                        src={videoData.thumbnail} 
                        alt="Generated AI Video Thumbnail Preview" 
+                       width={1280}
+                       height={720}
                        loading="lazy" 
                        className={`w-full h-full object-cover transition-all duration-700 ${status === 'READY' ? 'blur-xl opacity-30 scale-110' : 'blur-0 opacity-90 scale-100'}`} 
                      />
@@ -255,7 +257,7 @@ export default function DownloaderSection() {
 
             <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-5 flex items-center gap-4">
                <div className="bg-emerald-500/20 p-2 rounded-full shrink-0">
-                  <CheckCircle2 className="text-emerald-400 w-6 h-6" />
+                  <CheckCircle2 size={24} className="text-emerald-400 w-6 h-6" />
                </div>
                <div>
                  <h4 className="font-semibold text-emerald-300">Processing Complete</h4>
