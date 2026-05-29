@@ -4,6 +4,7 @@ import path from 'path';
 import puppeteer from 'puppeteer';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
+import { VALID_BLOG_SLUGS } from './src/data/blogPosts';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -132,7 +133,19 @@ async function startServer() {
   } else {
     const distPath = path.join(process.cwd(), 'dist');
     app.use(express.static(distPath));
-    app.get('*', (req, res) => {
+
+    // Fix soft 404s for blog explicitly
+    app.get('*', (req, res, next) => {
+      const p = req.path;
+      // Match /blog/:slug or /:lang/blog/:slug
+      const blogMatch = p.match(/^\/(?:[a-z]{2}\/)?blog\/([^\/]+)\/?$/);
+      
+      if (blogMatch) {
+         const slug = blogMatch[1];
+         if (!VALID_BLOG_SLUGS.includes(slug)) {
+            res.status(404);
+         }
+      }
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }

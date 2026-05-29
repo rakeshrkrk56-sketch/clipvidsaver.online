@@ -1,14 +1,11 @@
 import fs from 'fs';
 import path from 'path';
+import { VALID_BLOG_SLUGS } from '../src/data/blogPosts.js';
 
 const SITE_URL = 'https://clipvidsaver.online';
 const LANGUAGES = ['en', 'es', 'pt', 'de'];
 
-const BLOG_POSTS = [
-  'how-to-download-meta-ai-videos-without-watermark',
-  'meta-ai-video-generator-review',
-  'top-5-ai-video-downloader-tools'
-];
+const BLOG_POSTS = VALID_BLOG_SLUGS;
 
 const ROUTES = [
   { path: '', priority: '1.0', changefreq: 'daily' },

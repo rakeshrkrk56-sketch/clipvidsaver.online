@@ -1,12 +1,15 @@
 import { Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { getAllBlogPosts } from '../data/blogData';
 
 export default function Footer() {
   const { i18n } = useTranslation();
   const getLink = (path: string) => {
     return i18n.language === 'en' ? path : `/${i18n.language}${path === '/' ? '' : path}`;
   };
+  
+  const recentPosts = getAllBlogPosts().slice(0, 3);
 
   return (
     <footer className="bg-slate-50 border-t border-slate-200 pt-16 pb-8 px-4 text-center">
@@ -17,9 +20,21 @@ export default function Footer() {
         <span className="font-bold text-2xl text-slate-900 tracking-tight">ClipVidSaver</span>
       </div>
       
-      <p className="text-slate-600 max-w-md mx-auto mb-12 text-lg">
+      <p className="text-slate-600 max-w-md mx-auto mb-10 text-lg">
         The #1 Meta AI Video Downloader
       </p>
+
+      {/* Featured Blog Posts */}
+      <div className="max-w-4xl mx-auto mb-10 pt-6 border-t border-slate-200/60">
+        <h3 className="text-slate-800 font-bold mb-4">Latest Blog Posts</h3>
+        <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-slate-600">
+          {recentPosts.map(post => (
+            <Link key={post.slug} to={getLink(`/blog/${post.slug}`)} className="hover:text-indigo-600 transition-colors text-sm">
+              {post.title}
+            </Link>
+          ))}
+        </div>
+      </div>
 
       <div className="flex flex-wrap justify-center gap-x-6 gap-y-4 text-slate-600 font-medium max-w-3xl mx-auto mb-12">
         <Link to={getLink("/about")} className="hover:text-indigo-600 transition-colors">About</Link>

@@ -9,13 +9,28 @@ interface SEOProps {
   type?: 'website' | 'article';
   articleData?: any;
   structuredData?: any;
+  noindex?: boolean;
 }
 
-export default function SEO({ title, description, canonicalPath, type = 'website', articleData, structuredData }: SEOProps) {
+export default function SEO({ title, description, canonicalPath, type = 'website', articleData, structuredData, noindex }: SEOProps) {
   const location = useLocation();
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
+    // Handle Robots Metatag
+    let robotsTag = document.querySelector('meta[name="robots"]');
+    if (!robotsTag) {
+      robotsTag = document.createElement('meta');
+      robotsTag.setAttribute('name', 'robots');
+      document.head.appendChild(robotsTag);
+    }
+    
+    if (noindex) {
+      robotsTag.setAttribute('content', 'noindex, nofollow');
+    } else {
+      robotsTag.setAttribute('content', 'index, follow');
+    }
+
     // 1. Update Title
     const baseTitle = 'ClipVidSaver';
     const finalTitle = title ? `${title} | ${baseTitle}` : `Meta AI Video Downloader - No Watermark | ${baseTitle}`;

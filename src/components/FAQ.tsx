@@ -46,9 +46,10 @@ export default function FAQ() {
 
   return (
     <section className="max-w-3xl mx-auto px-4 mb-24" aria-labelledby="faq-heading">
-      <script type="application/ld+json">
-        {JSON.stringify(faqSchema)}
-      </script>
+      <script 
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <h2 id="faq-heading" className="text-3xl md:text-4xl font-bold text-center text-slate-900 mb-4">
         {t('faq.title')}
       </h2>
