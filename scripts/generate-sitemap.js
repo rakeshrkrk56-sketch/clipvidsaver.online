@@ -76,7 +76,7 @@ function generateSitemap() {
   console.log('Successfully generated sitemap.xml');
 
   // Also generate robots.txt
-  const robots = `User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`;
+  const robots = `User-agent: GPTBot\nAllow: /\n\nUser-agent: OAI-SearchBot\nAllow: /\n\nUser-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}/sitemap.xml\n`;
   fs.writeFileSync(path.join(publicDir, 'robots.txt'), robots);
   console.log('Successfully generated robots.txt');
 }
