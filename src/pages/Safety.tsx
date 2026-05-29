@@ -70,7 +70,7 @@ export default function Safety() {
           
           <Link 
             to="/contact" 
-            className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-slate-900 font-medium py-4 px-8 rounded-xl transition-colors shadow-lg shadow-indigo-600/30 text-lg w-full sm:w-auto min-w-[200px]"
+            className="inline-flex items-center justify-center bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium py-4 px-8 rounded-xl transition-colors shadow-sm text-lg w-full sm:w-auto min-w-[200px]"
           >
             Contact Us
           </Link>

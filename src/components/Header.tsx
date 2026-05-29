@@ -52,7 +52,7 @@ export default function Header() {
   return (
     <header className="flex items-center justify-between py-3 px-3 md:px-4 md:py-4 bg-white border-b border-slate-200 shadow-sm sticky top-0 z-50">
       <Link to={getLink("/")} className="flex items-center space-x-2 relative z-10 hover:opacity-80 transition-opacity shrink-0 min-w-0 mr-2">
-        <div className="bg-indigo-600 text-white p-1.5 md:p-2 rounded-lg shadow-lg shadow-indigo-600/30 shrink-0 flex items-center justify-center">
+        <div className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white p-1.5 md:p-2 rounded-lg shadow-sm shrink-0 flex items-center justify-center">
           <Download size={20} className="w-4 h-4 md:w-5 md:h-5 stroke-[2.5]" />
         </div>
         <span className="font-bold text-base sm:text-lg md:text-xl text-slate-900 tracking-tight truncate">ClipVidSaver</span>

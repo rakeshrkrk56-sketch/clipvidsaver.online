@@ -11,7 +11,7 @@ export default function Footer() {
   return (
     <footer className="bg-slate-50 border-t border-slate-200 pt-16 pb-8 px-4 text-center">
       <div className="flex items-center justify-center space-x-3 mb-10">
-        <div className="bg-indigo-600 text-white p-2 rounded-lg shadow-lg shadow-indigo-600/30">
+        <div className="bg-gradient-to-r from-indigo-600 to-violet-600 text-white p-2 rounded-lg shadow-sm">
           <Download size={24} className="stroke-[2.5]" />
         </div>
         <span className="font-bold text-2xl text-slate-900 tracking-tight">ClipVidSaver</span>

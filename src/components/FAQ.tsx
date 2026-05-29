@@ -62,14 +62,14 @@ export default function FAQ() {
           return (
             <div 
               key={idx} 
-              className={`bg-white rounded-2xl overflow-hidden border transition-colors ${isOpen ? 'border-indigo-300 shadow-lg shadow-indigo-500/10' : 'border-slate-200 shadow-sm'}`}
+              className={`bg-white rounded-2xl overflow-hidden border transition-colors ${isOpen ? 'border-indigo-400 shadow-lg shadow-indigo-500/10' : 'border-slate-200 shadow-sm'}`}
             >
               <button 
                 id={buttonId}
                 aria-expanded={isOpen}
                 aria-controls={panelId}
                 onClick={() => setOpenIndex(isOpen ? -1 : idx)}
-                className="w-full flex items-center justify-between p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                className="w-full flex items-center justify-between p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400"
               >
                 <h3 className="font-semibold text-slate-800 text-lg pr-4 m-0">{faq.q}</h3>
                 {isOpen ? (

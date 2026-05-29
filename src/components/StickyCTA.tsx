@@ -38,7 +38,7 @@ export default function StickyCTA() {
     <div className="fixed bottom-0 left-0 w-full z-50 md:hidden bg-white border-t border-slate-200 p-3 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] flex justify-center pb-[max(env(safe-area-inset-bottom),12px)]">
       <button
         onClick={scrollToTop}
-        className="w-full max-w-[300px] bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-3 rounded-xl transition-colors shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-2"
+        className="w-full max-w-[300px] bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium py-3 rounded-xl transition-colors shadow-lg shadow-indigo-600/20 flex items-center justify-center gap-2"
       >
         <Download size={20} />
         <span>Download Video</span>

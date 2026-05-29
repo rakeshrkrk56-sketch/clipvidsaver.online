@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { RefreshCw, PlayCircle, Lock, Download, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { RefreshCw, PlayCircle, Lock, Download, AlertTriangle, CheckCircle2, Share2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import type { VideoResult } from '../types';
 
@@ -11,6 +11,25 @@ export default function DownloaderSection() {
   const [errorMessage, setErrorMessage] = useState('');
   const [countdown, setCountdown] = useState(10);
   const [videoData, setVideoData] = useState<VideoResult | null>(null);
+
+  const handleShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'ClipVidSaver - Meta AI Video Downloader',
+          text: 'Download Meta AI generated videos without watermarks in HD for free!',
+          url: window.location.href,
+        });
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert('Link copied to clipboard!');
+      }
+    } catch (error) {
+      if ((error as Error).name !== 'AbortError') {
+        console.error('Error sharing:', error);
+      }
+    }
+  };
 
   const handleDownloadClick = async () => {
     if (!url.trim()) return;
@@ -123,13 +142,13 @@ export default function DownloaderSection() {
                 placeholder="Paste Meta AI video URL here..."
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
-                className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all text-slate-900 placeholder:text-slate-600 relative z-10"
+                className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 focus:bg-white transition-all text-slate-900 placeholder:text-slate-600 relative z-10"
               />
               <button
                 onClick={handleDownloadClick}
                 disabled={!url.trim()}
                 aria-label="Download Meta AI Video"
-                className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:hover:bg-indigo-600 text-white font-medium py-4 rounded-xl transition-colors shadow-lg shadow-indigo-600/20 relative z-10"
+                className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 disabled:opacity-50 disabled:hover:from-indigo-600 disabled:hover:to-violet-600 text-white font-medium py-4 rounded-xl transition-colors shadow-lg shadow-indigo-600/20 relative z-10"
               >
                 Download Meta AI Video
               </button>
@@ -147,7 +166,7 @@ export default function DownloaderSection() {
           >
             <div className="absolute top-0 left-0 w-full h-1 bg-slate-100">
               <motion.div 
-                className="h-full bg-indigo-500"
+                className="h-full bg-gradient-to-r from-indigo-500 to-violet-500"
                 initial={{ width: "0%" }}
                 animate={{ width: "100%" }}
                 transition={{ duration: 3.5, ease: "linear" }}
@@ -271,7 +290,7 @@ export default function DownloaderSection() {
                   <p className="text-xs font-bold tracking-widest text-slate-500 uppercase mb-4">Generating Secure Link</p>
                   <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden mb-6">
                     <motion.div 
-                      className="h-full bg-indigo-500 rounded-full"
+                      className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full"
                       initial={{ width: "0%" }}
                       animate={{ width: "100%" }}
                       transition={{ duration: 10, ease: "linear" }}
@@ -295,14 +314,23 @@ export default function DownloaderSection() {
                    </h3>
                    <button 
                     onClick={handleFileDownload}
-                    className="w-full relative z-10 flex items-center justify-center gap-3 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-4 rounded-xl transition-all shadow-lg shadow-indigo-600/30"
+                    className="w-full relative z-10 flex items-center justify-center gap-3 bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium py-4 rounded-xl transition-all shadow-lg shadow-indigo-600/30"
                    >
                      <Download size={20} />
                      <span>Download File</span>
                    </button>
+                   <div className="mt-4 w-full relative z-10">
+                     <button 
+                      onClick={handleShare}
+                      className="w-full flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-3.5 rounded-xl transition-colors border border-slate-200"
+                     >
+                      <Share2 size={18} />
+                      <span>Share with Friends</span>
+                     </button>
+                   </div>
                    <button 
                     onClick={() => { setStatus('IDLE'); setUrl(''); setVideoData(null); }}
-                    className="text-slate-500 text-sm mt-8 hover:text-indigo-400 font-medium relative z-10 transition-colors"
+                    className="text-slate-500 text-sm mt-6 hover:text-indigo-600 font-medium relative z-10 transition-colors"
                    >
                      Download Another Video
                    </button>

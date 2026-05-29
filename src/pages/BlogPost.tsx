@@ -85,7 +85,7 @@ export default function BlogPost() {
           <p className="text-slate-600 mb-6">Use our free tool to grab your Meta AI videos in HD.</p>
           <Link 
             to="/meta-ai-video-downloader" 
-            className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-3 px-6 rounded-xl transition-colors shadow-lg shadow-indigo-600/20"
+            className="inline-flex items-center justify-center bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white font-medium py-3 px-6 rounded-xl transition-colors shadow-lg shadow-indigo-600/20"
           >
             Go to Downloader
           </Link>
