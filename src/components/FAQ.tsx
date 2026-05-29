@@ -23,7 +23,12 @@ export default function FAQ() {
     {
       q: t('faq.q4'),
       a: t('faq.a4')
-    }
+    },
+    // We conditionally add q5 if it exists in the translation file
+    ...(t('faq.q5') !== 'faq.q5' && t('faq.q5') ? [{
+      q: t('faq.q5'),
+      a: t('faq.a5')
+    }] : [])
   ], [t]);
 
   const faqSchema = {
@@ -44,10 +49,10 @@ export default function FAQ() {
       <script type="application/ld+json">
         {JSON.stringify(faqSchema)}
       </script>
-      <h2 id="faq-heading" className="text-3xl md:text-4xl font-bold text-center text-white mb-4">
+      <h2 id="faq-heading" className="text-3xl md:text-4xl font-bold text-center text-slate-900 mb-4">
         {t('faq.title')}
       </h2>
-      <p className="text-center text-lg text-slate-400 mb-12">Common questions about ClipVidSaver.</p>
+      <p className="text-center text-lg text-slate-600 mb-12">Common questions about ClipVidSaver.</p>
       
       <div className="space-y-4">
         {FAQS.map((faq, idx) => {
@@ -57,7 +62,7 @@ export default function FAQ() {
           return (
             <div 
               key={idx} 
-              className={`bg-slate-900 rounded-2xl overflow-hidden border transition-colors ${isOpen ? 'border-indigo-500 shadow-lg shadow-indigo-500/10' : 'border-slate-800 shadow-sm'}`}
+              className={`bg-white rounded-2xl overflow-hidden border transition-colors ${isOpen ? 'border-indigo-300 shadow-lg shadow-indigo-500/10' : 'border-slate-200 shadow-sm'}`}
             >
               <button 
                 id={buttonId}
@@ -66,9 +71,9 @@ export default function FAQ() {
                 onClick={() => setOpenIndex(isOpen ? -1 : idx)}
                 className="w-full flex items-center justify-between p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               >
-                <h3 className="font-semibold text-slate-200 text-lg pr-4 m-0">{faq.q}</h3>
+                <h3 className="font-semibold text-slate-800 text-lg pr-4 m-0">{faq.q}</h3>
                 {isOpen ? (
-                  <ChevronUp className="text-indigo-400 shrink-0" aria-hidden="true" />
+                  <ChevronUp className="text-indigo-600 shrink-0" aria-hidden="true" />
                 ) : (
                   <ChevronDown className="text-slate-500 shrink-0" aria-hidden="true" />
                 )}
@@ -85,7 +90,7 @@ export default function FAQ() {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="p-6 pt-0 text-slate-400 leading-relaxed text-lg border-t border-slate-800/50 mt-2">
+                    <div className="p-6 pt-0 text-slate-600 leading-relaxed text-lg border-t border-slate-100 mt-2">
                       {faq.a}
                     </div>
                   </motion.div>

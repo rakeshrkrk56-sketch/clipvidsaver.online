@@ -1,14 +1,19 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface SEOProps {
   title?: string;
   description?: string;
   canonicalPath?: string;
+  type?: 'website' | 'article';
+  articleData?: any;
+  structuredData?: any;
 }
 
-export default function SEO({ title, description, canonicalPath }: SEOProps) {
+export default function SEO({ title, description, canonicalPath, type = 'website', articleData, structuredData }: SEOProps) {
   const location = useLocation();
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     // 1. Update Title
@@ -33,6 +38,10 @@ export default function SEO({ title, description, canonicalPath }: SEOProps) {
 
     const twitterDesc = document.querySelector('meta[property="twitter:description"]');
     if (twitterDesc) twitterDesc.setAttribute('content', finalDesc);
+
+    // Type
+    const ogType = document.querySelector('meta[property="og:type"]');
+    if (ogType) ogType.setAttribute('content', type);
 
     // 3. Update Canonical URL
     const finalCanonicalPath = canonicalPath !== undefined ? canonicalPath : location.pathname;
@@ -95,7 +104,133 @@ export default function SEO({ title, description, canonicalPath }: SEOProps) {
       hreflangTag.setAttribute('href', `${siteUrl}${langPath === '' ? '/' : langPath}`);
     });
 
-  }, [title, description, canonicalPath, location.pathname]);
+    // 5. Inject JSON-LD Schema
+    const baseSchemas = [
+      {
+        "@type": "WebSite",
+        "@id": `${siteUrl}/#website`,
+        "url": `${siteUrl}/`,
+        "name": "ClipVidSaver",
+        "description": t('seo.description') || finalDesc,
+        "inLanguage": i18n.language || "en"
+      },
+      {
+        "@type": "Organization",
+        "@id": `${siteUrl}/#organization`,
+        "name": "ClipVidSaver",
+        "url": `${siteUrl}/`,
+        "logo": {
+          "@type": "ImageObject",
+          "url": `${siteUrl}/og-image.jpg`
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "Customer Support",
+          "email": "claire9360@gmail.com"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": `${siteUrl}/#webapp`,
+        "name": "Meta AI Video Downloader",
+        "url": fullCanonicalUrl,
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "All",
+        "offers": {
+          "@type": "Offer",
+          "price": "0"
+        }
+      }
+    ];
+
+    // Breadcrumb schema
+    const pathParts = cleanlyPath.split('/').filter(Boolean);
+    const isLangPrefixOnly = languages.includes(pathParts[0]) && pathParts.length === 1;
+    let breadcrumbSchema = null;
+    
+    if (pathParts.length > 0 && !isLangPrefixOnly) {
+      let currentPath = '';
+      const listElements = [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": siteUrl
+      }];
+
+      let position = 2;
+      for (const part of pathParts) {
+        if (languages.includes(part)) continue;
+        currentPath += `/${part}`;
+        listElements.push({
+          "@type": "ListItem",
+          "position": position,
+          "name": part.charAt(0).toUpperCase() + part.slice(1).replace(/-/g, ' '),
+          "item": `${siteUrl}${currentPath}`
+        });
+        position++;
+      }
+
+      breadcrumbSchema = {
+        "@type": "BreadcrumbList",
+        "itemListElement": listElements
+      };
+    }
+
+    let finalSchemaData = [...baseSchemas];
+    if (breadcrumbSchema) {
+      finalSchemaData.push(breadcrumbSchema);
+    }
+    
+    if (type === 'article' && articleData) {
+      finalSchemaData.push({
+        "@type": "BlogPosting",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": fullCanonicalUrl
+        },
+        "headline": articleData.title,
+        "description": articleData.description || finalDesc,
+        "image": articleData.image || `${siteUrl}/og-image.jpg`,
+        "author": {
+          "@type": "Organization",
+          "name": "ClipVidSaver"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "ClipVidSaver",
+          "logo": {
+            "@type": "ImageObject",
+            "url": `${siteUrl}/og-image.jpg`
+          }
+        },
+        "datePublished": articleData.date || new Date().toISOString(),
+        "dateModified": articleData.date || new Date().toISOString()
+      });
+    }
+
+    if (structuredData) {
+      if (Array.isArray(structuredData)) {
+        finalSchemaData.push(...structuredData);
+      } else {
+        finalSchemaData.push(structuredData);
+      }
+    }
+
+    const schemaJson = JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": finalSchemaData
+    });
+
+    let scriptTag = document.getElementById('seo-jsonld');
+    if (!scriptTag) {
+      scriptTag = document.createElement('script');
+      scriptTag.id = 'seo-jsonld';
+      scriptTag.type = 'application/ld+json';
+      document.head.appendChild(scriptTag);
+    }
+    scriptTag.textContent = schemaJson;
+
+  }, [title, description, canonicalPath, location.pathname, type, articleData, structuredData, t, i18n.language]);
 
   return null;
 }

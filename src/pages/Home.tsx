@@ -33,12 +33,12 @@ export default function Home({ isHomePage = true }: HomeProps) {
 
       <div className="max-w-3xl mx-auto px-4 mb-16 text-center">
         {isHomePage ? (
-          <p className="text-slate-400">
-            {t('home.lookMetaAi')} <Link to="/meta-ai-video-downloader" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">{t('home.metaAiLink')}</Link>.
+          <p className="text-slate-600">
+            {t('home.lookMetaAi')} <Link to="/meta-ai-video-downloader" className="text-indigo-600 hover:text-indigo-500 font-medium transition-colors">{t('home.metaAiLink')}</Link>.
           </p>
         ) : (
-          <p className="text-slate-400">
-            {t('home.lookOther')} <Link to="/" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">{t('home.mainLink')}</Link>.
+          <p className="text-slate-600">
+            {t('home.lookOther')} <Link to="/" className="text-indigo-600 hover:text-indigo-500 font-medium transition-colors">{t('home.mainLink')}</Link>.
           </p>
         )}
       </div>

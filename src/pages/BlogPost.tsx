@@ -52,8 +52,8 @@ export default function BlogPost() {
   if (!post) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-24 text-center">
-        <h1 className="text-3xl font-bold text-white mb-4">Post not found</h1>
-        <Link to="/blog" className="text-indigo-400 hover:underline">Return to Blog</Link>
+        <h1 className="text-3xl font-bold text-slate-900 mb-4">Post not found</h1>
+        <Link to="/blog" className="text-indigo-600 hover:underline">Return to Blog</Link>
       </div>
     );
   }
@@ -62,21 +62,27 @@ export default function BlogPost() {
     <>
       <SEO 
         title={`${post.title} | ClipVidSaver Blog`} 
-        description={post.title} 
+        description={post.title}
+        type="article"
+        articleData={{
+          title: post.title,
+          description: post.title,
+          date: new Date(post.date).toISOString()
+        }}
       />
       <article className="max-w-3xl mx-auto px-4 py-16 md:py-24">
         <div className="mb-12 text-center">
-          <time className="text-indigo-400 font-medium mb-4 block">{post.date}</time>
-          <h1 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight leading-tight">{post.title}</h1>
+          <time className="text-indigo-600 font-medium mb-4 block">{post.date}</time>
+          <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-6 tracking-tight leading-tight">{post.title}</h1>
         </div>
         
-        <div className="prose prose-lg prose-invert prose-indigo mx-auto text-slate-300">
+        <div className="prose prose-lg  prose-indigo mx-auto text-slate-700">
           {post.content}
         </div>
 
-        <div className="mt-16 pt-8 border-t border-slate-800">
-          <h3 className="text-2xl font-bold text-white mb-6">Ready to download?</h3>
-          <p className="text-slate-400 mb-6">Use our free tool to grab your Meta AI videos in HD.</p>
+        <div className="mt-16 pt-8 border-t border-slate-200">
+          <h3 className="text-2xl font-bold text-slate-900 mb-6">Ready to download?</h3>
+          <p className="text-slate-600 mb-6">Use our free tool to grab your Meta AI videos in HD.</p>
           <Link 
             to="/meta-ai-video-downloader" 
             className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-3 px-6 rounded-xl transition-colors shadow-lg shadow-indigo-600/20"

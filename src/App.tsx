@@ -67,7 +67,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col bg-slate-950 font-sans text-slate-200 selection:bg-indigo-500/30 selection:text-indigo-200 relative">
+      <div className="min-h-screen flex flex-col bg-slate-50 font-sans text-slate-800 selection:bg-indigo-500/30 selection:text-indigo-900 relative">
         <Header />
         
         {/* Top Banner Ad Container */}
@@ -95,7 +95,7 @@ export default function App() {
         <div className="fixed bottom-0 left-0 w-full z-40 pointer-events-none flex justify-center pb-16 md:pb-0">
           <AdPlaceholder 
             id="ad-bottom-sticky" 
-            className="pointer-events-auto bg-slate-900/95 backdrop-blur-sm shadow-[0_-8px_20px_-5px_rgba(0,0,0,0.3)] border-t border-slate-800 w-full" 
+            className="pointer-events-auto bg-white/95 backdrop-blur-sm shadow-[0_-8px_20px_-5px_rgba(0,0,0,0.1)] border-t border-slate-200 w-full" 
           />
         </div>
 

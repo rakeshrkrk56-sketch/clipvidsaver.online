@@ -14,8 +14,8 @@ export default function Safety() {
         </div>
       </div>
       
-      <h1 className="text-4xl md:text-5xl font-black text-center text-white mb-4 tracking-tight">Safe Use Guidelines</h1>
-      <p className="text-xl text-slate-400 text-center mb-4">ClipVidSaver.online is designed to help users save AI-generated content responsibly and legally.</p>
+      <h1 className="text-4xl md:text-5xl font-black text-center text-slate-900 mb-4 tracking-tight">Safe Use Guidelines</h1>
+      <p className="text-xl text-slate-600 text-center mb-4">ClipVidSaver.online is designed to help users save AI-generated content responsibly and legally.</p>
       <p className="text-sm font-bold text-center text-slate-500 uppercase tracking-wider mb-12">Last Updated: January 2026</p>
 
       <div className="space-y-8">
@@ -25,9 +25,9 @@ export default function Safety() {
           <p className="text-amber-200/80 text-lg mt-4">Downloading copyrighted material without authorization may violate laws or the terms of the original platform.</p>
         </div>
 
-        <section className="bg-slate-900 p-8 rounded-3xl shadow-xl shadow-black/10 border border-slate-800">
+        <section className="bg-white p-8 rounded-3xl shadow-xl shadow-black/10 border border-slate-200">
           <h2 className="text-2xl font-bold text-slate-100 mb-4">What You CAN Do</h2>
-          <ul className="list-disc pl-6 space-y-2 text-lg text-slate-400">
+          <ul className="list-disc pl-6 space-y-2 text-lg text-slate-600">
             <li>Download AI-generated videos you personally created</li>
             <li>Save your own generated content for backup or offline access</li>
             <li>Use downloaded files in your own creative projects</li>
@@ -36,9 +36,9 @@ export default function Safety() {
           </ul>
         </section>
 
-        <section className="bg-slate-900 p-8 rounded-3xl shadow-xl shadow-black/10 border border-slate-800">
+        <section className="bg-white p-8 rounded-3xl shadow-xl shadow-black/10 border border-slate-200">
           <h2 className="text-2xl font-bold text-slate-100 mb-4">What You CANNOT Do</h2>
-          <ul className="list-disc pl-6 space-y-2 text-lg text-slate-400">
+          <ul className="list-disc pl-6 space-y-2 text-lg text-slate-600">
             <li>Download copyrighted videos without authorization</li>
             <li>Redistribute protected content illegally</li>
             <li>Use downloaded content to harm, impersonate, or deceive others</li>
@@ -47,30 +47,30 @@ export default function Safety() {
           </ul>
         </section>
 
-        <section className="bg-slate-900 p-8 rounded-3xl shadow-xl shadow-black/10 border border-slate-800">
+        <section className="bg-white p-8 rounded-3xl shadow-xl shadow-black/10 border border-slate-200">
           <h2 className="text-2xl font-bold text-slate-100 mb-4">Copyright & Ownership</h2>
-          <p className="text-lg text-slate-400 mb-4">AI-generated media may still be subject to platform rules, ownership rights, or licensing restrictions depending on the source platform and applicable laws.</p>
-          <p className="text-lg text-slate-400 mb-4">ClipVidSaver.online does not claim ownership over any content processed through the service.</p>
-          <p className="text-lg text-slate-400">If you believe any content violates your rights, please contact us immediately through the contact page or via:</p>
-          <p className="text-indigo-400 font-semibold text-lg mt-2"><a href="mailto:claire9360@gmail.com" className="hover:text-indigo-300 transition-colors">claire9360@gmail.com</a></p>
+          <p className="text-lg text-slate-600 mb-4">AI-generated media may still be subject to platform rules, ownership rights, or licensing restrictions depending on the source platform and applicable laws.</p>
+          <p className="text-lg text-slate-600 mb-4">ClipVidSaver.online does not claim ownership over any content processed through the service.</p>
+          <p className="text-lg text-slate-600">If you believe any content violates your rights, please contact us immediately through the contact page or via:</p>
+          <p className="text-indigo-600 font-semibold text-lg mt-2"><a href="mailto:claire9360@gmail.com" className="hover:text-indigo-500 transition-colors">claire9360@gmail.com</a></p>
         </section>
 
-        <section className="bg-slate-900 p-8 rounded-3xl shadow-xl shadow-black/10 border border-slate-800">
+        <section className="bg-white p-8 rounded-3xl shadow-xl shadow-black/10 border border-slate-200">
           <h2 className="text-2xl font-bold text-slate-100 mb-4">Your Privacy & Data</h2>
-          <p className="text-lg text-slate-400 mb-4">We take privacy seriously.</p>
-          <p className="text-lg text-slate-400 mb-4">ClipVidSaver.online does not permanently store processed video files. Downloads are temporarily handled only during processing and are not retained after delivery.</p>
-          <p className="text-lg text-slate-400">Basic analytics data may be collected to improve platform performance and user experience.</p>
+          <p className="text-lg text-slate-600 mb-4">We take privacy seriously.</p>
+          <p className="text-lg text-slate-600 mb-4">ClipVidSaver.online does not permanently store processed video files. Downloads are temporarily handled only during processing and are not retained after delivery.</p>
+          <p className="text-lg text-slate-600">Basic analytics data may be collected to improve platform performance and user experience.</p>
         </section>
 
-        <section className="bg-slate-900 p-8 md:p-12 rounded-3xl shadow-xl shadow-black/10 border border-slate-800 text-center">
+        <section className="bg-white p-8 md:p-12 rounded-3xl shadow-xl shadow-black/10 border border-slate-200 text-center">
           <h2 className="text-2xl font-bold text-slate-100 mb-4">Report Misuse or a Problem</h2>
-          <p className="text-lg text-slate-400 mb-8 max-w-lg mx-auto">
+          <p className="text-lg text-slate-600 mb-8 max-w-lg mx-auto">
             If you believe this tool is being misused for copyright infringement, privacy violations, or harmful activity, please contact us immediately.<br/><br/>We review reports as quickly as possible.
           </p>
           
           <Link 
             to="/contact" 
-            className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-4 px-8 rounded-xl transition-colors shadow-lg shadow-indigo-600/30 text-lg w-full sm:w-auto min-w-[200px]"
+            className="inline-flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 text-slate-900 font-medium py-4 px-8 rounded-xl transition-colors shadow-lg shadow-indigo-600/30 text-lg w-full sm:w-auto min-w-[200px]"
           >
             Contact Us
           </Link>
