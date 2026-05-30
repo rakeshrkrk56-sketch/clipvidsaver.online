@@ -5,7 +5,6 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import AdPlaceholder from './components/AdPlaceholder';
 import ScrollToTop from './components/ScrollToTop';
-import StickyCTA from './components/StickyCTA';
 
 // Lazy Loaded Pages
 const Home = React.lazy(() => import('./pages/Home'));
@@ -52,7 +51,8 @@ export default function App() {
   const innerRoutes = (
     <>
       <Route index element={<Home isHomePage={true} />} />
-      <Route path="meta-ai-video-downloader" element={<Home isHomePage={false} />} />
+      <Route path="meta-ai-video-downloader" element={<Home isHomePage={false} platformId="meta-ai" />} />
+      <Route path="kling-ai-video-downloader" element={<Home isHomePage={false} platformId="kling-ai" />} />
       <Route path="about" element={<About />} />
       <Route path="how-it-works" element={<HowItWorks />} />
       <Route path="founder" element={<Founder />} />
@@ -89,7 +89,6 @@ export default function App() {
         </main>
         
         <Footer />
-        <StickyCTA />
 
         {/* Bottom Sticky Ad Container */}
         <div className="fixed bottom-0 left-0 w-full z-40 pointer-events-none flex justify-center pb-16 md:pb-0">

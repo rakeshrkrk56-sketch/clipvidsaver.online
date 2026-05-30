@@ -2,34 +2,66 @@ import { useState, useMemo, useEffect } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTranslation } from 'react-i18next';
+import { PlatformConfig } from '../data/platforms';
 
-export default function FAQ() {
+interface FAQProps {
+  platform?: PlatformConfig;
+}
+
+export default function FAQ({ platform }: FAQProps) {
   const [openIndex, setOpenIndex] = useState<number>(0);
   const { t } = useTranslation();
 
-  const FAQS = useMemo(() => [
-    {
-      q: t('faq.q1'),
-      a: t('faq.a1')
-    },
-    {
-      q: t('faq.q2'),
-      a: t('faq.a2')
-    },
-    {
-      q: t('faq.q3'),
-      a: t('faq.a3')
-    },
-    {
-      q: t('faq.q4'),
-      a: t('faq.a4')
-    },
-    // We conditionally add q5 if it exists in the translation file
-    ...(t('faq.q5') !== 'faq.q5' && t('faq.q5') ? [{
-      q: t('faq.q5'),
-      a: t('faq.a5')
-    }] : [])
-  ], [t]);
+  const FAQS = useMemo(() => {
+    const name = platform ? platform.name : 'Meta AI';
+    if (platform) {
+      return [
+        {
+          q: t('platform.q1', { name }),
+          a: t('platform.a1', { name })
+        },
+        {
+          q: t('platform.q2', { name }),
+          a: t('platform.a2', { name })
+        },
+        {
+          q: t('platform.q3', { name }),
+          a: t('platform.a3', { name })
+        },
+        {
+          q: t('platform.q4', { name }),
+          a: t('platform.a4', { name })
+        },
+        {
+          q: t('platform.q5', { name }),
+          a: t('platform.a5', { name })
+        }
+      ];
+    }
+
+    return [
+      {
+        q: t('faq.q1'),
+        a: t('faq.a1')
+      },
+      {
+        q: t('faq.q2'),
+        a: t('faq.a2')
+      },
+      {
+        q: t('faq.q3'),
+        a: t('faq.a3')
+      },
+      {
+        q: t('faq.q4'),
+        a: t('faq.a4')
+      },
+      ...(t('faq.q5') !== 'faq.q5' && t('faq.q5') ? [{
+        q: t('faq.q5'),
+        a: t('faq.a5')
+      }] : [])
+    ];
+  }, [t, platform]);
 
   const faqSchema = useMemo(() => ({
     "@context": "https://schema.org",
@@ -45,7 +77,7 @@ export default function FAQ() {
   }), [FAQS]);
 
   useEffect(() => {
-    let scriptTag = document.getElementById('faq-jsonld');
+    let scriptTag = document.getElementById('faq-jsonld') as HTMLScriptElement | null;
     if (!scriptTag) {
       scriptTag = document.createElement('script');
       scriptTag.id = 'faq-jsonld';
@@ -69,9 +101,11 @@ export default function FAQ() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
       />
       <h2 id="faq-heading" className="text-3xl md:text-4xl font-bold text-center text-slate-900 mb-4">
-        {t('faq.title')}
+        {platform ? t('platform.faqTitle', { name: platform.name }) : t('faq.title')}
       </h2>
-      <p className="text-center text-lg text-slate-600 mb-12">Common questions about ClipVidSaver.</p>
+      <p className="text-center text-lg text-slate-600 mb-12">
+        Common questions about {platform ? platform.name : 'ClipVidSaver'}.
+      </p>
       
       <div className="space-y-4">
         {FAQS.map((faq, idx) => {

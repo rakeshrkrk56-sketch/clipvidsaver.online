@@ -90,6 +90,7 @@ export default function Header() {
   const menuItems = [
     { name: 'Home', path: '/', icon: Home },
     { name: 'Meta AI Downloader', path: '/meta-ai-video-downloader', icon: Video },
+    { name: 'Kling AI Downloader', path: '/kling-ai-video-downloader', icon: Video },
     { name: 'Blog', path: '/blog', icon: BookOpen },
     { name: 'How It Works', path: '/how-it-works', icon: Info },
     { name: 'Contact', path: '/contact', icon: Mail },
@@ -106,7 +107,8 @@ export default function Header() {
       
       <div className="flex items-center space-x-2 md:space-x-4 shrink-0">
         <nav className="hidden md:flex items-center space-x-6 mr-2">
-          <Link to={getLink("/meta-ai-video-downloader")} className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Downloader</Link>
+          <Link to={getLink("/meta-ai-video-downloader")} className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Meta AI</Link>
+          <Link to={getLink("/kling-ai-video-downloader")} className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">Kling AI</Link>
           <Link to={getLink("/how-it-works")} className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">{t('nav.howItWorks')}</Link>
           <Link to={getLink("/blog")} className="text-slate-600 hover:text-indigo-600 font-medium transition-colors">{t('nav.blog')}</Link>
         </nav>

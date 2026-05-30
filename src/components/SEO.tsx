@@ -33,7 +33,7 @@ export default function SEO({ title, description, canonicalPath, type = 'website
 
     // 1. Update Title
     const baseTitle = 'ClipVidSaver';
-    const finalTitle = title ? `${title} | ${baseTitle}` : `Meta AI Video Downloader - No Watermark | ${baseTitle}`;
+    const finalTitle = title ? `${title} | ${baseTitle}` : `Free AI Video Downloader (Meta AI & Kling AI) - No Watermark | ${baseTitle}`;
     document.title = finalTitle;
     
     // Update og:title and twitter:title
@@ -44,7 +44,7 @@ export default function SEO({ title, description, canonicalPath, type = 'website
     if (twitterTitle) twitterTitle.setAttribute('content', finalTitle);
 
     // 2. Update Description
-    const finalDesc = description || "Download Meta AI generated videos without watermark in HD. Free, fast & working 2026 tool by ClipVidSaver.";
+    const finalDesc = description || "Download Meta AI and Kling AI generated videos without watermarks in HD. The fastest free 2026 online tool by ClipVidSaver.";
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) metaDesc.setAttribute('content', finalDesc);
 
@@ -120,7 +120,7 @@ export default function SEO({ title, description, canonicalPath, type = 'website
     });
 
     // 5. Inject JSON-LD Schema
-    const baseSchemas = [
+    const baseSchemas: any[] = [
       {
         "@type": "WebSite",
         "@id": `${siteUrl}/#website`,
@@ -147,7 +147,7 @@ export default function SEO({ title, description, canonicalPath, type = 'website
       {
         "@type": "SoftwareApplication",
         "@id": `${siteUrl}/#webapp`,
-        "name": "Meta AI Video Downloader",
+        "name": title ? `${title.split(' - ')[0] || title} Video Downloader` : "AI Video Downloader (Meta AI & Kling AI)",
         "url": fullCanonicalUrl,
         "applicationCategory": "MultimediaApplication",
         "operatingSystem": "All",
@@ -236,7 +236,7 @@ export default function SEO({ title, description, canonicalPath, type = 'website
       "@graph": finalSchemaData
     });
 
-    let scriptTag = document.getElementById('seo-jsonld');
+    let scriptTag = document.getElementById('seo-jsonld') as HTMLScriptElement | null;
     if (!scriptTag) {
       scriptTag = document.createElement('script');
       scriptTag.id = 'seo-jsonld';

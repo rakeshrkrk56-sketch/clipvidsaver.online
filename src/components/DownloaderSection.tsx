@@ -1,23 +1,32 @@
 import { useState, useEffect } from 'react';
 import { RefreshCw, PlayCircle, Lock, Download, AlertTriangle, CheckCircle2, Share2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from 'react-i18next';
 import type { VideoResult } from '../types';
+import { PlatformConfig } from '../data/platforms';
 
 type Status = 'IDLE' | 'PROCESSING' | 'READY' | 'DOWNLOADABLE' | 'ERROR';
 
-export default function DownloaderSection() {
+interface DownloaderSectionProps {
+  platform?: PlatformConfig;
+}
+
+export default function DownloaderSection({ platform }: DownloaderSectionProps) {
   const [url, setUrl] = useState('');
   const [status, setStatus] = useState<Status>('IDLE');
   const [errorMessage, setErrorMessage] = useState('');
   const [countdown, setCountdown] = useState(10);
   const [videoData, setVideoData] = useState<VideoResult | null>(null);
+  const { t } = useTranslation();
+
+  const platformName = platform ? platform.name : 'AI';
 
   const handleShare = async () => {
     try {
       if (navigator.share) {
         await navigator.share({
-          title: 'ClipVidSaver - Meta AI Video Downloader',
-          text: 'Download Meta AI generated videos without watermarks in HD for free!',
+          title: `ClipVidSaver - ${platformName} Video Downloader`,
+          text: `Download ${platformName} generated videos without watermarks in HD for free!`,
           url: window.location.href,
         });
       } else {
@@ -111,14 +120,9 @@ export default function DownloaderSection() {
 
   const handleFileDownload = () => {
     if (videoData?.url) {
-      // Create a temporary link to trigger the download
-      const a = document.createElement('a');
-      a.href = videoData.url;
-      a.download = 'meta-ai-video.mp4';
-      a.target = '_blank'; // In case it cannot download forcefully
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+      // For same-origin proxy download, top-level navigation is incredibly robust for mobile Chrome/Safari
+      // as it avoids creating zombie blank tabs and prompts for native saving immediately.
+      window.location.href = videoData.url;
     }
   };
 
@@ -138,8 +142,8 @@ export default function DownloaderSection() {
               <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 rounded-xl blur-xl opacity-50 pointer-events-none" />
               <input
                 type="url"
-                aria-label="Paste Meta AI Video URL"
-                placeholder="Paste Meta AI video URL here..."
+                aria-label={platform ? t('platform.placeholder', { name: platform.name }) : 'Paste AI Video URL'}
+                placeholder={platform ? t('platform.placeholder', { name: platform.name }) : "Paste AI video URL here..."}
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 focus:bg-white transition-all text-slate-900 placeholder:text-slate-600 relative z-10"
@@ -147,10 +151,10 @@ export default function DownloaderSection() {
               <button
                 onClick={handleDownloadClick}
                 disabled={!url.trim()}
-                aria-label="Download Meta AI Video"
-                className="w-full bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 disabled:opacity-50 disabled:hover:from-indigo-600 disabled:hover:to-violet-600 text-white font-medium py-4 rounded-xl transition-colors shadow-lg shadow-indigo-600/20 relative z-10"
+                aria-label={platform ? t('platform.btnText', { name: platform.name }) : 'Download Video'}
+                className={`w-full bg-gradient-to-r ${platform ? platform.gradient : 'from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500'} disabled:opacity-50 disabled:hover:from-indigo-600 disabled:hover:to-violet-600 text-white font-medium py-4 rounded-xl transition-colors shadow-lg shadow-indigo-600/20 relative z-10`}
               >
-                Download Meta AI Video
+                {platform ? t('platform.btnText', { name: platform.name }) : 'Download Video'}
               </button>
             </div>
           </motion.div>
