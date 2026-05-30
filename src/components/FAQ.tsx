@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useTranslation } from 'react-i18next';
@@ -75,24 +75,6 @@ export default function FAQ({ platform }: FAQProps) {
       }
     }))
   }), [FAQS]);
-
-  useEffect(() => {
-    let scriptTag = document.getElementById('faq-jsonld') as HTMLScriptElement | null;
-    if (!scriptTag) {
-      scriptTag = document.createElement('script');
-      scriptTag.id = 'faq-jsonld';
-      scriptTag.type = 'application/ld+json';
-      document.head.appendChild(scriptTag);
-    }
-    scriptTag.textContent = JSON.stringify(faqSchema);
-
-    return () => {
-      const tag = document.getElementById('faq-jsonld');
-      if (tag) {
-        tag.remove();
-      }
-    };
-  }, [faqSchema]);
 
   return (
     <section className="max-w-3xl mx-auto px-4 mb-24" aria-labelledby="faq-heading">

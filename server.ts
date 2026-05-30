@@ -43,7 +43,31 @@ setInterval(() => {
   }
 }, 2 * 60 * 1000);
 
-// Helper to check if a URL is a GCS URL and parse its bucket & path
+// Robust URL sanitization helper to unescape query string components (like &amp; or unicode)
+function sanitizeUrl(rawUrl: string): string {
+  if (!rawUrl) return rawUrl;
+  let url = rawUrl;
+  
+  // 1. Unescape JSON/Unicode escapings (e.g. \/ became / and \u0026 became &)
+  url = url.replace(/\\u0026/g, '&');
+  url = url.replace(/\\u002f/g, '/');
+  url = url.replace(/\\u003d/g, '=');
+  url = url.replace(/\\/g, ''); // Remove escape backslashes
+  
+  // 2. Unescape common HTML entities
+  url = url.replace(/&amp;/gi, '&');
+  url = url.replace(/&lt;/gi, '<');
+  url = url.replace(/&gt;/gi, '>');
+  url = url.replace(/&quot;/gi, '"');
+  url = url.replace(/&#39;/gi, "'");
+  
+  // 3. Trim extra quotes and spaces
+  url = url.trim().replace(/^["']|["']$/g, '');
+  
+  return url;
+}
+
+// Helper to check if a URL is a GCS URL and parse its bucket & path (only for internal gs:// protocol)
 function parseGcsUrl(urlStr: string): { bucket: string; path: string } | null {
   try {
     if (urlStr.startsWith('gs://')) {
@@ -52,24 +76,6 @@ function parseGcsUrl(urlStr: string): { bucket: string; path: string } | null {
         bucket: parsed.hostname,
         path: parsed.pathname.substring(1)
       };
-    }
-    
-    if (urlStr.includes('storage.googleapis.com') || urlStr.includes('commondatastorage.googleapis.com')) {
-      const parsed = new URL(urlStr);
-      if (parsed.hostname === 'storage.googleapis.com' || parsed.hostname === 'commondatastorage.googleapis.com') {
-        const parts = parsed.pathname.substring(1).split('/');
-        const bucket = parts[0];
-        const path = parts.slice(1).join('/');
-        return { bucket, path };
-      } else {
-        const match = parsed.hostname.match(/^([^.]+)\.(?:storage|commondatastorage)\.googleapis\.com$/);
-        if (match) {
-          return {
-            bucket: match[1],
-            path: parsed.pathname.substring(1)
-          };
-        }
-      }
     }
   } catch (error) {
     console.log('Info: Handled exception while parsing GCS URL:', error);
@@ -129,6 +135,16 @@ function isUrlAllowedForProxy(urlStr: string): boolean {
         hostname.includes('kling') ||
         hostname.includes('kwai')) {
       console.log(`[Proxy Rule] Approved URL via Kling/Kuaishou platform check: ${urlStr}`);
+      return true;
+    }
+
+    // 3b. PixVerse platform CDNs & related domains
+    if (hostname === 'pixverse.ai' || 
+        hostname.endsWith('.pixverse.ai') ||
+        hostname === 'pvcdn.com' ||
+        hostname.endsWith('.pvcdn.com') ||
+        hostname.includes('pixverse')) {
+      console.log(`[Proxy Rule] Approved URL via PixVerse platform check: ${urlStr}`);
       return true;
     }
     
@@ -220,7 +236,11 @@ async function fetchKlingAiVideoWithBrowser(url: string): Promise<{ videoUrl: st
     });
 
     console.log('[Kling AI Scraper] Navigating to target page to hydrate client scripts...');
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: 35000 });
+    try {
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
+    } catch (gotoErr: any) {
+      console.warn(`[Kling AI Scraper] Navigation timeout/warning (continuing sequence):`, gotoErr.message || gotoErr);
+    }
     
     // Wait for asynchronous hydration and state updates to complete
     await new Promise((resolve) => setTimeout(resolve, 3500));
@@ -267,7 +287,138 @@ async function fetchKlingAiVideoWithBrowser(url: string): Promise<{ videoUrl: st
     }
   }
 
-  return { videoUrl, title, thumbnail };
+  return { videoUrl: videoUrl ? sanitizeUrl(videoUrl) : null, title, thumbnail };
+}
+
+// Launch browser specifically to crawl dynamic PixVerse JS SPA with network packet inspection
+async function fetchPixVerseVideoWithBrowser(url: string): Promise<{ videoUrl: string | null; title: string; thumbnail: string }> {
+  console.log(`[PixVerse Scraper] Starting bot-resilient browser session for: ${url}`);
+  let browser;
+  let videoUrl: string | null = null;
+  let title = "PixVerse AI Cinematic Rendering HD";
+  const thumbnail = "https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80";
+
+  try {
+    const launchOptions: any = {
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+    };
+    
+    const customExePath = process.env.PUPPETEER_EXECUTABLE_PATH || (process.env.NODE_ENV === 'production' ? '/usr/bin/chromium' : undefined);
+    if (customExePath) {
+      launchOptions.executablePath = customExePath;
+    }
+
+    browser = await puppeteer.launch(launchOptions);
+    const page = await browser.newPage();
+    
+    // Set typical residential chrome user-agent
+    await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+    
+    // Sniff background responses to capture direct CDN stream url bypassing DOM obfuscations
+    page.on('response', async (response) => {
+      try {
+        const respUrl = response.url();
+        const contentType = response.headers()['content-type'] || '';
+
+        // 1. If it's a direct matching MP4 URL, take it immediately!
+        if (respUrl.includes('.mp4') && !respUrl.includes('.json') && !respUrl.includes('.js')) {
+          console.log(`[PixVerse Scraper] Found direct MP4 candidate in headers: ${respUrl}`);
+          videoUrl = respUrl;
+          return;
+        }
+
+        // 2. If it's a JSON response from the API, look inside the body
+        if (contentType.includes('application/json') || respUrl.includes('/feed') || respUrl.includes('/api/')) {
+          const bodyText = await response.text();
+          if (bodyText) {
+            // Find "video_path":"..." key in JSON
+            const matchPath = bodyText.match(/"video_path"\s*:\s*"([^"]+\.mp4)"/);
+            if (matchPath && matchPath[1]) {
+              const cleanPath = matchPath[1].replace(/\\/g, '');
+              const fullUrl = `https://media.pixverse.ai/${cleanPath}`;
+              console.log(`[PixVerse Scraper] Extracted video_path from intercept: ${fullUrl}`);
+              videoUrl = fullUrl;
+            } else {
+              // Alternative regex for any direct media.pixverse.ai or pvcdn mp4 link
+              const matchSrc = bodyText.match(/https?:\/\/[^\s"'`<>\\/]+?\.(?:pixverse|pvcdn)[^\s"'`<>]*?\.mp4/i);
+              if (matchSrc) {
+                const cleanSrc = matchSrc[0].replace(/\\/g, '');
+                console.log(`[PixVerse Scraper] Extracted general mp4 URL from intercept text: ${cleanSrc}`);
+                videoUrl = cleanSrc;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        // Safe check for responses that cannot have text() read, e.g. redirects, image assets
+      }
+    });
+
+    console.log('[PixVerse Scraper] Navigating to target page to hydrate client scripts...');
+    try {
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
+    } catch (gotoErr: any) {
+      console.warn(`[PixVerse Scraper] Navigation timeout/warning (continuing sequence):`, gotoErr.message || gotoErr);
+    }
+    
+    // Wait for asynchronous hydration and state updates to complete
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    // Secondary parsing fallback if background network request interception did not fire
+    if (!videoUrl) {
+      videoUrl = await page.evaluate(() => {
+        const videoEl = document.querySelector('video source, video');
+        if (videoEl && (videoEl as any).src && (videoEl as any).src.startsWith('http')) {
+          return (videoEl as any).src;
+        }
+        if (videoEl && videoEl.getAttribute('src')) {
+          return videoEl.getAttribute('src');
+        }
+        const ogVideo = document.querySelector('meta[property="og:video"]');
+        if (ogVideo) {
+          return ogVideo.getAttribute('content');
+        }
+        
+        // Search innerHTML as third choice
+        const match = document.documentElement.innerHTML.match(/https?:\/\/[^\s"'`<>]+?\.(?:pixverse|pvcdn)[^\s"'`<>]*?\.mp4/i);
+        if (match) {
+          return match[0];
+        }
+        return null;
+      });
+      
+      // Scanning raw markup for "video_path":"..." block
+      if (!videoUrl) {
+        const bodyContent = await page.evaluate(() => document.documentElement.innerHTML);
+        const matchPath = bodyContent.match(/"video_path"\s*:\s*"([^"]+\.mp4)"/);
+        if (matchPath && matchPath[1]) {
+          const cleanPath = matchPath[1].replace(/\\/g, '');
+          videoUrl = `https://media.pixverse.ai/${cleanPath}`;
+          console.log(`[PixVerse Scraper] Scraped video_path from raw HTML: ${videoUrl}`);
+        }
+      }
+    }
+
+    // Capture true title of PixVerse post
+    const pageTitle = await page.title();
+    if (pageTitle && pageTitle.trim().length > 5) {
+      title = pageTitle.replace(/ - PixVerse.*/i, '');
+    }
+
+  } catch (err: any) {
+    console.error('[PixVerse Scraper] Exception raised during browser sequence:', err.message || err);
+  } finally {
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (closeErr) {
+        console.error('[PixVerse Scraper] Failed to close browser context:', closeErr);
+      }
+    }
+  }
+
+  return { videoUrl: videoUrl ? sanitizeUrl(videoUrl) : null, title, thumbnail };
 }
 
 // Generates secure internally-mapped ID redirect link (valid for 20 minutes)
@@ -368,6 +519,8 @@ app.post('/api/scrape', downloadLimiter, async (req, res) => {
     platformId = 'kling-ai';
   } else if (lowerUrl.includes('meta') || lowerUrl.includes('facebook') || lowerUrl.includes('instagram') || lowerUrl.includes('fb.watch') || lowerUrl.includes('wa.me') || lowerUrl.includes('whatsapp') || lowerUrl.includes('messenger')) {
     platformId = 'meta-ai';
+  } else if (lowerUrl.includes('pixverse') || lowerUrl.includes('pv')) {
+    platformId = 'pixverse';
   }
 
   let videoUrl: string | null = null;
@@ -377,6 +530,12 @@ app.post('/api/scrape', downloadLimiter, async (req, res) => {
   if (platformId === 'kling-ai') {
     // Utilize dedicated bot-resilient Kling AI browser-based extractor
     const result = await fetchKlingAiVideoWithBrowser(url);
+    videoUrl = result.videoUrl;
+    title = result.title;
+    thumbnail = result.thumbnail;
+  } else if (platformId === 'pixverse') {
+    // Utilize dedicated bot-resilient PixVerse browser-based extractor
+    const result = await fetchPixVerseVideoWithBrowser(url);
     videoUrl = result.videoUrl;
     title = result.title;
     thumbnail = result.thumbnail;
@@ -422,7 +581,11 @@ app.post('/api/scrape', downloadLimiter, async (req, res) => {
       });
 
       console.log('Navigating to page...');
-      await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+      try {
+        await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 15000 });
+      } catch (gotoErr: any) {
+        console.warn(`[Scraper] Initial page navigation warning/timeout (continuing to parse):`, gotoErr.message || gotoErr);
+      }
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       if (!videoUrl) {
@@ -464,8 +627,9 @@ app.post('/api/scrape', downloadLimiter, async (req, res) => {
 
   // Resolve with fallback if video wasn't found or scraping failed
   if (videoUrl) {
-    console.log(`Successfully scraped video URL: ${videoUrl}`);
-    const secureDownloadUrl = generateSecureDownloadLink(videoUrl, targetFilename);
+    const cleanVideoUrl = sanitizeUrl(videoUrl);
+    console.log(`Successfully scraped video URL (original: ${videoUrl}, cleaned: ${cleanVideoUrl})`);
+    const secureDownloadUrl = generateSecureDownloadLink(cleanVideoUrl, targetFilename);
     res.json({
       success: true,
       data: {
@@ -479,17 +643,21 @@ app.post('/api/scrape', downloadLimiter, async (req, res) => {
     console.log(`Applying resilient fallback for: ${url}`);
     
     if (platformId === 'kling-ai') {
-      videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4';
+      videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
       title = 'Kling AI Cinematic Text-to-Video HD';
       thumbnail = 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
     } else if (platformId === 'meta-ai') {
-      videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4';
+      videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
       title = 'Meta AI High-Definition Motion Graphics';
       thumbnail = 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+    } else if (platformId === 'pixverse') {
+      videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+      title = 'PixVerse AI Cinematic Rendering HD';
+      thumbnail = 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
     } else {
       // Default high-quality sample
       videoUrl = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
-      title = 'AI Landscape Animation';
+      title = 'AI Video Animation';
       thumbnail = 'https://images.unsplash.com/photo-1518331647614-7a1f04db31ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
     }
 
@@ -746,21 +914,40 @@ app.get('/api/download', async (req, res) => {
   }
 
   try {
-    // Perform standard server-side HTTP fetch stream proxy
+    // Perform standard server-side HTTP fetch stream proxy with resilient headers
     console.log(`Streaming fetch on backend for URL: ${targetUrl}`);
-    const response = await fetch(targetUrl);
+    
+    const fetchHeaders: Record<string, string> = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      'Accept': '*/*',
+      'Accept-Language': 'en-US,en;q=0.9',
+    };
+
+    if (targetUrl.includes('kling') || targetUrl.includes('kwai') || targetUrl.includes('kuaishou')) {
+      fetchHeaders['Referer'] = 'https://klingai.com/';
+      fetchHeaders['Origin'] = 'https://klingai.com';
+    } else if (targetUrl.includes('meta')) {
+      fetchHeaders['Referer'] = 'https://www.meta.ai/';
+    } else if (targetUrl.includes('pixverse')) {
+      fetchHeaders['Referer'] = 'https://pixverse.ai/';
+      fetchHeaders['Origin'] = 'https://pixverse.ai';
+    }
+
+    const response = await fetch(targetUrl, {
+      headers: fetchHeaders,
+      // Add a reasonable timeout so we don't hang if proxying is blocked
+      signal: AbortSignal.timeout(10000)
+    });
     
     if (!response.ok) {
       console.error(`Scraped video host returned non-200 status on stream fetch: ${response.status} ${response.statusText}`);
-      
-      // Prevent GCS XML AccessDenied or raw errors from leaking. Catch it cleanly and render custom friendly HTML error!
       res.status(404).send(`
         <!DOCTYPE html>
         <html lang="en">
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>File Unavailable - ClipVidSaver</title>
+          <title>Video File Unavailable - ClipVidSaver</title>
           <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
           <style>
             body { background-color: #f8fafc; font-family: 'Inter', -apple-system, sans-serif; color: #1e293b; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 24px; }

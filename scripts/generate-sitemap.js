@@ -11,6 +11,7 @@ const ROUTES = [
   { path: '', priority: '1.0', changefreq: 'daily' },
   { path: '/meta-ai-video-downloader', priority: '1.0', changefreq: 'daily' },
   { path: '/kling-ai-video-downloader', priority: '1.0', changefreq: 'daily' },
+  { path: '/pixverse-video-downloader', priority: '1.0', changefreq: 'daily' },
   { path: '/how-it-works', priority: '0.8', changefreq: 'weekly' },
   { path: '/about', priority: '0.6', changefreq: 'monthly' },
   { path: '/founder', priority: '0.6', changefreq: 'monthly' },

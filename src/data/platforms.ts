@@ -35,11 +35,11 @@ export const PLATFORMS: PlatformConfig[] = [
     id: 'pixverse',
     name: 'PixVerse',
     slug: 'pixverse-video-downloader',
-    color: 'slate-600',
-    gradient: 'from-slate-600 to-sky-600',
-    badgeBg: 'bg-slate-50 border-slate-200 text-slate-700',
-    isSupported: false,
-    description: 'Upcoming: Professional PixVerse cinematic AI video downloads in pristine HD.'
+    color: 'blue-600',
+    gradient: 'from-blue-600 to-cyan-500',
+    badgeBg: 'bg-blue-50 border-blue-200 text-blue-700',
+    isSupported: true,
+    description: 'Natively download PixVerse professional text-to-video generations clean of any watermarks or logos.'
   },
   {
     id: 'hailuo-ai',

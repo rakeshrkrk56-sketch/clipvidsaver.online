@@ -53,6 +53,7 @@ export default function App() {
       <Route index element={<Home isHomePage={true} />} />
       <Route path="meta-ai-video-downloader" element={<Home isHomePage={false} platformId="meta-ai" />} />
       <Route path="kling-ai-video-downloader" element={<Home isHomePage={false} platformId="kling-ai" />} />
+      <Route path="pixverse-video-downloader" element={<Home isHomePage={false} platformId="pixverse" />} />
       <Route path="about" element={<About />} />
       <Route path="how-it-works" element={<HowItWorks />} />
       <Route path="founder" element={<Founder />} />
